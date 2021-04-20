@@ -1,0 +1,42 @@
+service: wesley-serverless-aws-lambda
+
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: sa-east-1
+  memorySize: 256
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+      Resource:
+        - "arn:aws:s3:::*"
+  lambdaHashingVersion: 20201221
+
+functions:
+  opitimize:
+    handler: opitimize.handle
+    environment:
+      bucket: wesley-serverless-aws-lambda
+    events:
+      - s3:
+          bucket: wesley-serverless-aws-lambda
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploads/
+            - suffix: .jpg
+      - s3:
+          bucket: wesley-serverless-aws-lambda
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploads/
+            - suffix: .png
+      - s3:
+          bucket: wesley-serverless-aws-lambda
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploads/
+            - suffix: .jpeg
